@@ -1,10 +1,12 @@
 from jugri import toDF
+import numpy as np
+import pandas as pd
 import unittest
 from gremlin_python.process.graph_traversal import GraphTraversal
 from gremlin_python.structure.graph import Vertex, Path
 
 
-def wrapContentAsTraversal(*content):
+def wrap_content_as_traversal(*content):
     mockTraversal = GraphTraversal.__new__(GraphTraversal)
     mockTraversal.toList = lambda: list(content)
     return mockTraversal
@@ -12,14 +14,71 @@ def wrapContentAsTraversal(*content):
 
 class TestPandification(unittest.TestCase):
 
+    def testNestedFields(self):
+        traversal_result = [{"T.id":"T1","T.label":"node" },
+                      {"T.id":"T2","T.label":"node" , "nested": {"field1": [0]}},
+                      {"T.id":"T3","T.label":"node", "nested": {"field1": [1]}},
+                      {"T.id":"T4","T.label":"node" }]
+        df = toDF(traversal_result)
+        test_df = pd.DataFrame(columns=['T.id', 'T.label', 'nested.field1'],
+                               data=[['T1', 'node', np.nan],
+                                     ['T2', 'node', 0.0],
+                                     ['T3', 'node', 1.0],
+                                     ['T4', 'node', np.nan]],
+                               index=[0, 1, 2, 3])
+
+        self.assertTrue(test_df.equals(df)
+                             , "Dictionary with nested field does not transform properly.")
+
+    def testEmptyResult(self):
+        traversal_result = []
+        df = toDF(traversal_result)
+        self.assertTrue(pd.DataFrame().equals(df), "Empty result does not yield empty DataFrame.")
+
     def testToListCall(self):
-        traversal = wrapContentAsTraversal(Vertex("v1"), Vertex("v2"), Vertex("v3"))
+        traversal = wrap_content_as_traversal(Vertex("v1"), Vertex("v2"), Vertex("v3"))
         df = toDF(traversal)
         self.assertEqual(len(df.index), 3, "DataFrame is not populated properly.")
 
     def testColumns(self):
-        traversal = wrapContentAsTraversal(Vertex("v1"), Vertex("v2"), Vertex("v3"))
+        traversal = wrap_content_as_traversal(Vertex("v1"), Vertex("v2"), Vertex("v3"))
         df = toDF(traversal)
         self.assertListEqual(df.columns.values.tolist(), ['id', 'label'], "Incorrect field names extracted.")
+
+    def testDeprecated(self):
+        traversal = wrap_content_as_traversal(Vertex("v1"), Vertex("v2"), Vertex("v3"))
+        with self.assertRaises(DeprecationWarning) as context:
+            toDF(traversal, keep_first_only=False)
+
+    def testDictList(self):
+        data = [{'Cluster': [
+                             '_id',
+                             'cluster.prop1.value',
+                             '_label'],
+                 'Organization': ['org.prop2.value',
+                                  '_id',
+                                  '_label'],
+                 'Address': ['addr.prop1.value',
+                             'addr.prop2.value',
+                             '_label',
+                             '_id'],
+                 'Job': [
+                         '_id',
+                         '_label'],
+                 'Person': ['cluster.prop1.value',
+                            'cluster.prop2.value',
+                            'cluster.prop3.value',
+                            '_id',
+                            '_label'],
+                 'Source': [
+                            '_id'],
+                'Nothing': []
+        }]
+        df = toDF(data)
+        self.assertEqual(df['Nothing'].values[0], None)
+        self.assertEqual(df['Source'].values[0], '_id')
+        self.assertListEqual(df['Job'].values[0], [
+            '_id',
+            '_label'])
 
 
