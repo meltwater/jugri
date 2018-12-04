@@ -13,4 +13,4 @@ if missing_dependencies:
         "Missing required dependencies {0}".format(missing_dependencies))
 del hard_dependencies, dependency, missing_dependencies
 
-from .pandify import toDF
+from .pandify import to_df, toDF

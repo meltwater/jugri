@@ -1,4 +1,4 @@
-from jugri import toDF
+from jugri import to_df, toDF
 import numpy as np
 import pandas as pd
 import unittest
@@ -19,7 +19,7 @@ class TestPandification(unittest.TestCase):
                       {"T.id":"T2","T.label":"node" , "nested": {"field1": [0]}},
                       {"T.id":"T3","T.label":"node", "nested": {"field1": [1]}},
                       {"T.id":"T4","T.label":"node" }]
-        df = toDF(traversal_result)
+        df = to_df(traversal_result)
         test_df = pd.DataFrame(columns=['T.id', 'T.label', 'nested.field1'],
                                data=[['T1', 'node', np.nan],
                                      ['T2', 'node', 0.0],
@@ -32,23 +32,28 @@ class TestPandification(unittest.TestCase):
 
     def testEmptyResult(self):
         traversal_result = []
-        df = toDF(traversal_result)
+        df = to_df(traversal_result)
         self.assertTrue(pd.DataFrame().equals(df), "Empty result does not yield empty DataFrame.")
 
     def testToListCall(self):
         traversal = wrap_content_as_traversal(Vertex("v1"), Vertex("v2"), Vertex("v3"))
-        df = toDF(traversal)
+        df = to_df(traversal)
         self.assertEqual(len(df.index), 3, "DataFrame is not populated properly.")
 
     def testColumns(self):
         traversal = wrap_content_as_traversal(Vertex("v1"), Vertex("v2"), Vertex("v3"))
-        df = toDF(traversal)
+        df = to_df(traversal)
         self.assertListEqual(df.columns.values.tolist(), ['id', 'label'], "Incorrect field names extracted.")
 
-    def testDeprecated(self):
+    def testDeprecatedParameter(self):
         traversal = wrap_content_as_traversal(Vertex("v1"), Vertex("v2"), Vertex("v3"))
         with self.assertRaises(DeprecationWarning) as context:
-            toDF(traversal, keep_first_only=False)
+            to_df(traversal, keep_first_only=False)
+
+    def testDeprecatedFunction(self):
+        traversal = wrap_content_as_traversal(Vertex("v1"), Vertex("v2"), Vertex("v3"))
+        with self.assertRaises(DeprecationWarning) as context:
+            toDF(traversal, key_value_pairs=False, flatten_dict=True)
 
     def testDictList(self):
         data = [{'Cluster': [
@@ -74,7 +79,7 @@ class TestPandification(unittest.TestCase):
                             '_id'],
                 'Nothing': []
         }]
-        df = toDF(data)
+        df = to_df(data)
         self.assertEqual(df['Nothing'].values[0], None)
         self.assertEqual(df['Source'].values[0], '_id')
         self.assertListEqual(df['Job'].values[0], [

@@ -21,7 +21,7 @@ dependencies = list(read_all('requirements.txt'))
 
 
 setup(name='Jugri',
-      version='0.3.0',
+      version='0.4.0',
       description=long_description,
       description_content_type='text/markdown',
       author='Laszlo Velinszky',

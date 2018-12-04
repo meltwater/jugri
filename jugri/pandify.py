@@ -38,7 +38,12 @@ def _get_singular(value):
         return value
 
 
-def toDF(gremlin_traversal, keep_first_only=None, key_value_pairs=False, flatten_dict=True, auto_cardinality=True):
+def toDF(*args, **kwargs):
+    raise DeprecationWarning("to_df should be used instead.")
+    to_df(args, kwargs)
+
+
+def to_df(gremlin_traversal, keep_first_only=None, key_value_pairs=False, flatten_dict=True, auto_cardinality=True):
     # type: (bool, bool, bool, bool) -> pd.DataFrame
     """
     Converts a Gremlin Traversal to a Pandas DataFrame. It expects a traversal or a list of traversal results.

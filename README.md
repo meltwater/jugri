@@ -37,7 +37,7 @@ from gremlin_python.structure.graph import Graph
 graph = Graph()
 g = graph.traversal()
 
-df = jugri.toDF(g.V().valueMap(True).limit(10))
+df = jugri.to_df(g.V().valueMap(True).limit(10))
 
 # df is a Pandas DataFrame with the results of the query.
 ```
