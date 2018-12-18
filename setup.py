@@ -20,7 +20,7 @@ def read_all(filename):
 dependencies = list(read_all('requirements.txt'))
 
 
-setup(name='Jugri',
+setup(name='jugri',
       version='0.4.0',
       description=long_description,
       description_content_type='text/markdown',
