@@ -1,6 +1,6 @@
 # JUGRI
 The JUpyter-GRemlin Interface. 
-Gremlinpython package is easy to use to 
+The Gremlinpython package is easy to use to 
 create queries against any property graph 
 that supports the Tinkerpop interface.
 However, parsing the gremlin results is more complex 
@@ -19,7 +19,11 @@ Tested on Python 3.7
 
 ## Install/update
 
-Install latest **stable** release:
+### Install from PyPI (the usual way)
+
+`pip install --user --upgrade jugri`
+
+### Install from source
 
 `pip install --user --upgrade -e git+git@github.com:meltwater/jugri.git#egg=jugri`
 
