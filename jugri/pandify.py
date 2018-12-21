@@ -28,7 +28,7 @@ def _flatten(d, parent_key='', sep='_'):
 def _get_singular(value):
     if type(value) is list:
         lv = len(value)
-        if  lv == 1:
+        if lv == 1:
             return value[0]
         elif lv == 0:
             None
@@ -43,7 +43,7 @@ def toDF(*args, **kwargs):
     to_df(args, kwargs)
 
 
-def to_df(gremlin_traversal, keep_first_only=None, key_value_pairs=False, flatten_dict=True, auto_cardinality=True):
+def to_df(gremlin_traversal, key_value_pairs=False, flatten_dict=True, auto_cardinality=True, detect_profiling=True):
     # type: (bool, bool, bool, bool) -> pd.DataFrame
     """
     Converts a Gremlin Traversal to a Pandas DataFrame. It expects a traversal or a list of traversal results.
@@ -57,6 +57,7 @@ def to_df(gremlin_traversal, keep_first_only=None, key_value_pairs=False, flatte
             become the "." concatenated hierarchy of the names (e.g. start.date.month, end.date.year, etc.)
     :param auto_cardinality: Set it to False for better performance. Singe element arrays will be automatically
             converted into the first element.
+    :param detect_profiling: Automatically detect and prettify profiling results.
     :return: Pandas DataFrame
     """
     if type(gremlin_traversal) is GraphTraversal:
@@ -64,20 +65,19 @@ def to_df(gremlin_traversal, keep_first_only=None, key_value_pairs=False, flatte
     if len(gremlin_traversal) == 0:
         return pd.DataFrame()
 
-    if keep_first_only is not None:
-        raise DeprecationWarning("""keep_first_only is deprecated since v0.3. 
-        Conversion is automatic and can be turned off using the auto_cardinality option.""")
-
     logger.debug("Type of first element: {}".format(type(gremlin_traversal[0])))
 
     if type(gremlin_traversal[0]) is dict:
-        if flatten_dict:
-            gremlin_traversal = [_flatten(_, sep='.') for _ in gremlin_traversal]
-        if key_value_pairs:
-            df = pd.DataFrame(data={"value": [list(_.values())[0] for _ in gremlin_traversal]},
-                              index=[list(_.keys())[0] for _ in gremlin_traversal])
+        if detect_profiling and "@type" in gremlin_traversal[0].keys() and gremlin_traversal[0]["@type"] == "g:TraversalMetrics":
+            df = pd.DataFrame([_flatten(_["@value"], sep='.') for _ in gremlin_traversal[0]["@value"]["metrics"]])
         else:
-            df = pd.DataFrame(gremlin_traversal)
+            if flatten_dict:
+                gremlin_traversal = [_flatten(_, sep='.') for _ in gremlin_traversal]
+            if key_value_pairs:
+                df = pd.DataFrame(data={"value": [list(_.values())[0] for _ in gremlin_traversal]},
+                                  index=[list(_.keys())[0] for _ in gremlin_traversal])
+            else:
+                df = pd.DataFrame(gremlin_traversal)
     elif isinstance(gremlin_traversal[0], Element):
         df = pd.DataFrame([_.__dict__ for _ in gremlin_traversal])
     elif type(gremlin_traversal[0]) is Path:
