@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+import versioneer
 from setuptools import setup, find_packages
 
 # read the contents of your README file
@@ -13,7 +13,7 @@ def read_all(filename):
     """
     Read file line by line
     """
-    with open(filename,"r") as myfile:
+    with open(filename, "r") as myfile:
         yield myfile.readline()
 
 
@@ -21,7 +21,8 @@ dependencies = list(read_all('requirements.txt'))
 
 
 setup(name='jugri',
-      version='0.4.1',
+      version=versioneer.get_version(),
+      cmdclass=versioneer.get_cmdclass(),
       description=long_description,
       description_content_type='text/markdown',
       author='Laszlo Velinszky',

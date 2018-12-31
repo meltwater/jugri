@@ -45,15 +45,42 @@ class TestPandification(unittest.TestCase):
         df = to_df(traversal)
         self.assertListEqual(df.columns.values.tolist(), ['id', 'label'], "Incorrect field names extracted.")
 
-    def testDeprecatedParameter(self):
-        traversal = wrap_content_as_traversal(Vertex("v1"), Vertex("v2"), Vertex("v3"))
-        with self.assertRaises(DeprecationWarning) as context:
-            to_df(traversal, keep_first_only=False)
+    def testProfiling(self):
+        data = [{'@type': 'g:TraversalMetrics',
+                 '@value': {'dur': 0.8397500000000001,
+                            'metrics': [{'@type': 'g:Metrics',
+                                         '@value': {'dur': 0.210785,
+                                                    'counts': {'traverserCount': 1, 'elementCount': 1},
+                                                    'name': 'NeptuneGraphQueryStep(Vertex)',
+                                                    'annotations': {'percentDur': 25.10092289371837},
+                                                    'id': '8.0.0()'}},
+                                        {'@type': 'g:Metrics',
+                                         '@value': {'dur': 0.628965,
+                                                    'counts': {'traverserCount': 1, 'elementCount': 1},
+                                                    'name': 'PropertyMapStep(value)',
+                                                    'annotations': {'percentDur': 74.89907710628164},
+                                                    'id': '4.0.0()'}}]}}]
+        df = to_df(data)
+        self.assertAlmostEqual(df.iloc[0,0],25.10092289371837, 5,"DataFrame format is not correct.")
+        self.assertAlmostEqual(df.loc[1,"annotations.percentDur"], 74.89908,4, "Profile data not correctly flattened.")
 
-    def testDeprecatedFunction(self):
-        traversal = wrap_content_as_traversal(Vertex("v1"), Vertex("v2"), Vertex("v3"))
-        with self.assertRaises(DeprecationWarning) as context:
-            toDF(traversal, key_value_pairs=False, flatten_dict=True)
+    def testNoProfiling(self):
+        data = [{'@type': 'g:TraversalMetrics',
+                 '@value': {'dur': 0.8397500000000001,
+                            'metrics': [{'@type': 'g:Metrics',
+                                         '@value': {'dur': 0.210785,
+                                                    'counts': {'traverserCount': 1, 'elementCount': 1},
+                                                    'name': 'NeptuneGraphQueryStep(Vertex)',
+                                                    'annotations': {'percentDur': 25.10092289371837},
+                                                    'id': '8.0.0()'}},
+                                        {'@type': 'g:Metrics',
+                                         '@value': {'dur': 0.628965,
+                                                    'counts': {'traverserCount': 1, 'elementCount': 1},
+                                                    'name': 'PropertyMapStep(value)',
+                                                    'annotations': {'percentDur': 74.89907710628164},
+                                                    'id': '4.0.0()'}}]}}]
+        df = to_df(data, detect_profiling=False)
+        self.assertEqual(df.loc[0,'@type'],'g:TraversalMetrics',"DataFrame format is not correct.")
 
     def testDictList(self):
         data = [{'Cluster': [
