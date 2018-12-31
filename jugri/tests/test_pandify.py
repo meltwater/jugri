@@ -45,11 +45,6 @@ class TestPandification(unittest.TestCase):
         df = to_df(traversal)
         self.assertListEqual(df.columns.values.tolist(), ['id', 'label'], "Incorrect field names extracted.")
 
-    def testDeprecatedParameter(self):
-        traversal = wrap_content_as_traversal(Vertex("v1"), Vertex("v2"), Vertex("v3"))
-        with self.assertRaises(DeprecationWarning) as context:
-            to_df(traversal, keep_first_only=False)
-
     def testProfiling(self):
         data = [{'@type': 'g:TraversalMetrics',
                  '@value': {'dur': 0.8397500000000001,
