@@ -1,4 +1,9 @@
 # JUGRI
+
+![PyPI - Downloads](https://img.shields.io/pypi/dm/jugri.svg)
+![Travis (.org)](https://img.shields.io/travis/meltwater/jugri.svg)
+
+
 The JUpyter-GRemlin Interface. 
 The Gremlinpython package is easy to use to 
 create queries against any property graph 
