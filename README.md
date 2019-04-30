@@ -1,3 +1,4 @@
+
 # JUGRI
 
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/jugri.svg)
@@ -15,6 +16,8 @@ an easy to use interface to convert these results into
 the widely used Pandas DataFrame. 
 
 More features are on their way...
+
+![JUGRI Logo](https://underthehood.meltwater.com/images/own/2018-12-14-jugri-the-jupyter-gremlin-interface/jupyter-gremlin-logo.png)
 
 ## Requirements
 
