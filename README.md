@@ -1,4 +1,10 @@
+
 # JUGRI
+
+![PyPI - Downloads](https://img.shields.io/pypi/dm/jugri.svg)
+![Travis (.org)](https://img.shields.io/travis/meltwater/jugri.svg)
+
+
 The JUpyter-GRemlin Interface. 
 The Gremlinpython package is easy to use to 
 create queries against any property graph 
@@ -10,6 +16,8 @@ an easy to use interface to convert these results into
 the widely used Pandas DataFrame. 
 
 More features are on their way...
+
+![JUGRI Logo](https://underthehood.meltwater.com/images/own/2018-12-14-jugri-the-jupyter-gremlin-interface/jupyter-gremlin-logo.png)
 
 ## Requirements
 

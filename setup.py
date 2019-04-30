@@ -23,8 +23,9 @@ dependencies = list(read_all('requirements.txt'))
 setup(name='jugri',
       version=versioneer.get_version(),
       cmdclass=versioneer.get_cmdclass(),
-      description=long_description,
-      description_content_type='text/markdown',
+      description="JUGRI - The JUpyter - GRemlin Interface",
+      long_description=long_description,
+      long_description_content_type='text/markdown',
       author='Laszlo Velinszky',
       author_email='laszlo.velinszky@meltwater.com',
       url='https://github.com/meltwater/jugri',
@@ -32,5 +33,10 @@ setup(name='jugri',
       packages=find_packages(),
       setup_requires=["pytest-runner"] + dependencies,
       tests_requires=["pytest"] + dependencies,
-      test_suite="tests"
+      test_suite="tests",
+      classifiers=[
+          "Programming Language :: Python :: 3",
+          "License :: OSI Approved :: Apache Software License",
+          "Operating System :: OS Independent",
+      ]
 )
