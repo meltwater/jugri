@@ -22,27 +22,34 @@ More features are on their way...
 ## Requirements
 
 Tested on Python 3.7
-- gremlinpython
-- pandas
+- `gremlinpython`
+- `pandas`
 
 ## Install/update
 
 ### Install from PyPI (the usual way)
 
-`pip install --user --upgrade jugri`
+```
+pip install --user --upgrade jugri
+```
 
 ### Install from source
 
-`pip install --user --upgrade -e git+git@github.com:meltwater/jugri.git#egg=jugri`
+```
+pip install --user --upgrade -e git+git@github.com:meltwater/jugri.git#egg=jugri
+```
 
 or (using https)
 
-`pip install --user --upgrade -e git+https://github.com/meltwater/jugri.git#egg=jugri`
+```
+pip install --user --upgrade -e git+https://github.com/meltwater/jugri.git#egg=jugri
+```
 
 ## Usage
 
 Convert Gremlin query results to a Pandas DataFrame:
-```
+
+```python
 import jugri
 from gremlin_python.structure.graph import Graph
 
@@ -55,9 +62,10 @@ df = jugri.to_df(g.V().valueMap(True).limit(10))
 ```
 
 You can find a [Jupyter notebook example](https://github.com/meltwater/jugri/blob/master/example/Pandification.ipynb)
-in the `/example` folder.
+in the [`example`](example) folder.
 
 ## Uninstall
 
-`pip uninstall jugri`
-
+```
+pip uninstall jugri
+```
