@@ -1,2 +1,2 @@
-pandas
-gremlinpython
+pandas~=0.20.0
+gremlinpython~=3.3.0
