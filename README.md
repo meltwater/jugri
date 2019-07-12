@@ -17,7 +17,7 @@ the widely used Pandas DataFrame.
 
 More features are on their way...
 
-![JUGRI Logo](https://underthehood.meltwater.com/images/own/2018-12-14-jugri-the-jupyter-gremlin-interface/jupyter-gremlin-logo.png)
+[![JUGRI Logo](https://underthehood.meltwater.com/images/own/2018-12-14-jugri-the-jupyter-gremlin-interface/jupyter-gremlin-logo.png)](https://www.travis-ci.org/meltwater/jugri)
 
 ## Requirements
 
